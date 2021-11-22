@@ -205,3 +205,57 @@ Es la forma de pasar informacion del hijo al padre.
         >
         </app-img>
    ```
+
+### Ciclo de vida de los Componentes
+
+- **constructor:** crea la instancia del componente. Corre antes del render. Es importante que **no corras cosas asincronas** en el constructor. El constructor se corre cada vez que se crea un componente.
+
+- **ngOnChanges:** Corre antes y durante el render (cada vez que detecta un cambio en un `@Input`). Su objetivo es estar actualizando los **cambios en los @inputs**. Las veces que se actualice el valor de todos los @input que tengamos en el componente, lo vamos a recibir en el *ngOnChanges*
+
+  - Los cambios que llegan son de tipo *SimpleChanges*, interfaz que podemos exportar de `@angular/core`. Estoy podemos utilizarlo para leer los cambios
+  - Que pasa si tenemos varios inputs y solo queremos leer los cambios de un input en especifico?.
+    - Esto podemos solucionarlo convirtiendo el `@input` en un set. Esto consiste en independizar la variable del input, y crear una funcion que se encargue de asignar el valor del input a nuestra variable. Ahora la diferencia es que podemos procesar el input dentro de esa funcion.
+
+    ```TypeScript
+        //Input tradicional
+        export class ImgComponent implements OnInit {
+            @Input() img!:string;
+        }
+    ```
+
+    ```TypeScript
+        //Utilizando set
+        export class ImgComponent implements OnInit {
+            img!:string;
+            
+            @Input() 
+            set ChangeImg(src_img:string){
+                this.img = src_img;
+                // Code goes herek
+            }
+        }
+    ```
+
+    - Ahora deberiamos de cambiar el nombre del input por *ChangeImg* desde nuestro componente padre y listo.
+    - Si no quieres cambiar el nombre del input, puedes personalizar el nombre del Input en su declaracion
+
+    ```TypeScript
+        //Utilizando set
+        export class ImgComponent implements OnInit {
+            img!:string;
+            
+            @Input('img') 
+            set ChangeImg(src_img:string){
+                this.img = src_img;
+                // Code goes herek
+            }
+        }
+    ```
+
+- **ngOnInit:** Tambien corre antes del render. Aqui **si podemos correr cosas asincronas**. Corre una sola vez.
+
+- **ngAfterViewInit:** Corre despues del render. Aqui podemos manejar los hijos (HTML), ya que los componentes ya deberian de estar pintados. Las directivas normalmente se corren en el *AfterViewInit*
+
+- **ngOnDestroy:** Cuando se elimina el componente. *Dato interesante:* un *ngIf* en caso de ser verdadero,crea una instancia del componente, y en caso de ser falso, elimina la instancia del componente, llamando a *ngOnDestroy*.
+
+  - **Dato importante:** algunos eventos siguen existiendo aun si se eliminan el componente. Por eso es importante utilizar el *ngOnDestroy* para limpiar los eventos que puedan quedar abiertos
