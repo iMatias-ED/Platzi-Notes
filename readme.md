@@ -1,6 +1,6 @@
-# Cursos de Angular en Platzi. Resumenes
+# Cursos en Platzi. Resumenes
 
-En este repositorio encontraras mis apuntes personales sobre los cursos de Angular que vaya relizando en Platzi.
+En este repositorio encontraras mis apuntes personales sobre los cursos que vaya relizando en Platzi.
 
 ## Como aprovechar al maximo los apuntes
 
